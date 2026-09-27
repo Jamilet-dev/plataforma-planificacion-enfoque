@@ -1,27 +1,39 @@
-# Build results
-[Bb]in/
-[Oo]bj/
+## .NET
+bin/
+obj/
+out/
 
-# Visual Studio
+## Visual Studio / Rider / VS Code
 .vs/
-
-# VS Code
 .vscode/
-
-# User-specific files
-*.user
 *.suo
+*.user
 *.userosscache
 *.sln.docstates
+.idea/
 
-# Test results
-TestResults/
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
 
-# NuGet
+## NuGet
 *.nupkg
 *.snupkg
-packages/
+**/packages/*
+!**/packages/build/
 
-# OS files
+## Archivos de entorno / secretos
+appsettings.Development.json
+appsettings.*.local.json
+*.env
+.env
+
+## Logs
+*.log
+
+## Sistema operativo
 .DS_Store
 Thumbs.db
