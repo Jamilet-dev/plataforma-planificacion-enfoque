@@ -1,0 +1,15 @@
+## Qué cambia
+
+- AQUI COLOCAS LAS COSAS QUE SE AGREGARON O CAMBIARON EN EL REPO
+
+## Por qué
+
+- EL POR QUE DE TU DECISION
+
+## Cómo probarlo
+
+- COMO PROBAR LOS CAMBIOS
+
+## Qué NO incluye
+
+S
