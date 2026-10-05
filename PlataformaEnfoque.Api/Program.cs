@@ -14,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<PlataformaEnfoque.Servicios.Cuentas.ServicioRegistro>();
+
+
 // >>> AQUI SE IRAN AGREGANDO LOS SERVICIOS EN CADA RAMA <<<
 
 var app = builder.Build();
