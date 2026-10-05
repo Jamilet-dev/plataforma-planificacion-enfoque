@@ -32,6 +32,27 @@ public class ServicioRegistro(AppDbContext db, ServicioTokens tokens, ServicioCo
         await db.SaveChangesAsync();
     }
 
+        public const string MensajeReenvio =
+        "Si el correo esta registrado y pendiente de activar, recibiras un nuevo enlace.";
+
+    public async Task<string> ReenviarAsync(string? correo)
+    {
+        ValidadorEntrada.ExigirCorreoValido(correo);
+        var correoNormal = ValidadorEntrada.NormalizarCorreo(correo!);
+        var usuario = await db.Usuarios.FirstOrDefaultAsync(u => u.Correo == correoNormal);
+
+        // Solo si nunca confirmo su correo. Asi un usuario desactivado por un admin
+        // no puede reactivarse solo pidiendo otro enlace.
+        if (usuario != null && !usuario.CorreoConfirmado)
+        {
+            await EmitirEnlaceAsync(usuario); // invalida el enlace anterior
+            await db.SaveChangesAsync();
+        }
+
+        // La MISMA respuesta exista o no el correo: no revela quien esta registrado.
+        return MensajeReenvio;
+    }
+
         public async Task ActivarAsync(string? valorToken)
     {
         // ConsumirAsync ya rechaza si el token se uso o vencio, y en ese caso no se cambia nada.
