@@ -13,4 +13,13 @@ public class CuentasController(ServicioRegistro registro) : ControllerBase
         await registro.RegistrarAsync(dto.Correo, dto.Contrasena);
         return Ok(new { mensaje = "Cuenta creada. Revisa tu correo para activarla." });
     }
+
+    [HttpGet("activar")]
+    public async Task<IActionResult> Activar([FromQuery] string? token)
+    {
+        await registro.ActivarAsync(token);
+        return Ok(new { mensaje = "Cuenta activada. Ya puedes iniciar sesion." });
+    }
 }
+
+

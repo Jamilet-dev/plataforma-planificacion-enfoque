@@ -32,6 +32,15 @@ public class ServicioRegistro(AppDbContext db, ServicioTokens tokens, ServicioCo
         await db.SaveChangesAsync();
     }
 
+        public async Task ActivarAsync(string? valorToken)
+    {
+        // ConsumirAsync ya rechaza si el token se uso o vencio, y en ese caso no se cambia nada.
+        var token = await tokens.ConsumirAsync(valorToken, TipoToken.Activacion);
+        token.Usuario.Activo = true;
+        token.Usuario.CorreoConfirmado = true;
+        await db.SaveChangesAsync();
+    }
+
     private async Task EmitirEnlaceAsync(Usuario usuario)
     {
         var token = await tokens.EmitirAsync(usuario, TipoToken.Activacion, TimeSpan.FromHours(24));
