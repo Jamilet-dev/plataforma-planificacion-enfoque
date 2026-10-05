@@ -25,6 +25,9 @@ using var smtp = new SmtpClient(host, puerto)
     Credentials = new NetworkCredential(usuarioSmtp, claveSmtp)
 };
 
+// Idempotente: solo toma los Pendiente. Como cada envio se marca Enviado al instante,
+// ejecutar este programa dos veces seguidas no repite ningun correo (RF-NOT-12).
+// Importante: no lo ejecutes dos veces AL MISMO TIEMPO.
 var pendientes = await db.CorreosEnCola
     .Where(c => c.Estado == EstadoCorreo.Pendiente)
     .OrderBy(c => c.Id)
