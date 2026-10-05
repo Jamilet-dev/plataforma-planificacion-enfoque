@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PlataformaEnfoque.Api/PlataformaEnfoque.Api.csproj" />
+  <Project Path="PlataformaEnfoque.Datos/PlataformaEnfoque.Datos.csproj" />
+  <Project Path="PlataformaEnfoque.Enviador/PlataformaEnfoque.Enviador.csproj" />
+  <Project Path="PlataformaEnfoque.Servicios/PlataformaEnfoque.Servicios.csproj" />
+</Solution>
