@@ -19,4 +19,33 @@ var remitente = Leer("SMTP_REMITENTE");
 var opciones = new DbContextOptionsBuilder<AppDbContext>().UseSqlServer(cadenaConexion).Options;
 using var db = new AppDbContext(opciones);
 
-// >>> para siguiente commit <<<
+using var smtp = new SmtpClient(host, puerto)
+{
+    EnableSsl = true,
+    Credentials = new NetworkCredential(usuarioSmtp, claveSmtp)
+};
+
+var pendientes = await db.CorreosEnCola
+    .Where(c => c.Estado == EstadoCorreo.Pendiente)
+    .OrderBy(c => c.Id)
+    .ToListAsync();
+
+Console.WriteLine($"Correos pendientes: {pendientes.Count}");
+
+foreach (var correo in pendientes)
+{
+    try
+    {
+        smtp.Send(new MailMessage(remitente, correo.Destinatario, correo.Asunto, correo.Cuerpo));
+        correo.Estado = EstadoCorreo.Enviado;
+        correo.EnviadoEn = DateTime.UtcNow;
+        // Se guarda correo por correo: si el siguiente falla, los ya enviados quedan marcados.
+        await db.SaveChangesAsync();
+        Console.WriteLine($"Enviado: {correo.Id} a {correo.Destinatario}");
+    }
+    catch (Exception ex)
+    {
+        // Sigue pendiente; se reintenta en la proxima ejecucion. (Reintentos formales llegan en la semana 11.)
+        Console.WriteLine($"No se pudo enviar el correo {correo.Id}: {ex.Message}");
+    }
+}
