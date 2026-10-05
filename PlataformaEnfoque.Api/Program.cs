@@ -13,11 +13,10 @@ builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(cadenaConexion, b => b.MigrationsAssembly("PlataformaEnfoque.Datos")));
 
 builder.Services.AddControllers();
-
-builder.Services.AddScoped<PlataformaEnfoque.Servicios.Cuentas.ServicioRegistro>();
-
-
 // >>> AQUI SE IRAN AGREGANDO LOS SERVICIOS EN CADA RAMA <<<
+builder.Services.AddScoped<PlataformaEnfoque.Servicios.Cuentas.ServicioRegistro>();
+builder.Services.AddScoped<PlataformaEnfoque.Servicios.Cuentas.ServicioTokens>();
+builder.Services.AddScoped<PlataformaEnfoque.Servicios.Cuentas.ServicioCola>();
 
 var app = builder.Build();
 

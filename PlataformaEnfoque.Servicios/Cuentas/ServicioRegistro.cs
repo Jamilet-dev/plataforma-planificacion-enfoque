@@ -5,7 +5,7 @@ using PlataformaEnfoque.Servicios.Seguridad;
 
 namespace PlataformaEnfoque.Servicios.Cuentas;
 
-public class ServicioRegistro(AppDbContext db)
+public class ServicioRegistro(AppDbContext db, ServicioTokens tokens, ServicioCola cola)
 {
     public async Task RegistrarAsync(string? correo, string? contrasena)
     {
@@ -26,6 +26,19 @@ public class ServicioRegistro(AppDbContext db)
         };
         db.Usuarios.Add(usuario);
 
+        await EmitirEnlaceAsync(usuario);
+
+        // Usuario, token y correo en cola se guardan juntos en una sola operacion.
         await db.SaveChangesAsync();
+    }
+
+    private async Task EmitirEnlaceAsync(Usuario usuario)
+    {
+        var token = await tokens.EmitirAsync(usuario, TipoToken.Activacion, TimeSpan.FromHours(24));
+        var urlBase = Environment.GetEnvironmentVariable("PLATAFORMA_URL_BASE") ?? "http://localhost:5000";
+        cola.Encolar(
+            usuario.Correo,
+            "Activa tu cuenta",
+            $"Abre este enlace para activar tu cuenta (vence en 24 horas):\n{urlBase}/api/cuentas/activar?token={token.Valor}");
     }
 }
